@@ -2,7 +2,7 @@
 
 An automated greenhouse system built around an **Arduino Mega**. It monitors temperature, humidity, soil moisture and water level, controls pumps, a heater, a fan and lighting, and comes with a **web dashboard** featuring a built-in simulation mode.
 
-> **Status:** v1.0, an academic project at ISIMM. See the (#-roadmap) for what's coming next.
+> **Status:** v1.0, an academic project at ISIMM. See the [Roadmap](#roadmap) for what's coming next.
 
 ![Prototype](docs/prototype.jpg)
 
@@ -109,8 +109,9 @@ Wire the components following `docs/wiring.png`.
 
 ## 🧠 What I Learned
 
-- **Handling noisy sensor readings:** [one sentence on how you solved it, e.g. averaging several samples or adding thresholds]
-- **Structuring a dashboard around a state machine:** [one sentence on why it helped, e.g. clear states made simulation and testing simpler]
+- **Handling noisy sensor readings:** Averaging several samples / Adding thresholds
+- **Boosting OOP basics and learning :** Encapsulation / Generic templates / Inheritance 
+- **Structuring a dashboard around a state machine:** Clear states made simulation and testing simpler
 
 ---
 
