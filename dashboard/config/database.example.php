@@ -2,9 +2,9 @@
 // config/database.php
 class Database {
     private $host = "localhost";
-    private $db_name = "smart_greenhouse";
-    private $username = "root";
-    private $password = "";  // Par défaut vide sur XAMPP
+    private $db_name = "your_db_name";
+    private $username = "your_db_user";
+    private $password = "your_db_password";  // empty on  XAMPP by default
     public $conn;
 
     public function getConnection() {
