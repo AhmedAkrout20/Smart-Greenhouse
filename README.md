@@ -24,7 +24,7 @@ An automated greenhouse system built around an **Arduino Mega**. It monitors tem
 ```
 ┌────────────────────┐      ┌──────────────┐      ┌────────────────────┐
 │  Sensors           │      │              │      │      Actuators     │
-│  DHT11, soil,      │────▶│ Arduino Mega │─────▶│  pumps, heater,    │
+│  DHT11, soil,      │─────▶│ Arduino Mega │─────▶│  pumps, heater,    │
 │  water level       │      │  (control)   │      │  fan, LEDs, buzzer │
 └────────────────────┘      └──────┬───────┘      └────────────────────┘
                                    │
