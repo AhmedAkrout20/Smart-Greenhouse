@@ -4,7 +4,7 @@ An automated greenhouse system built around an **Arduino Mega**. It monitors tem
 
 > **Status:** v1.0, an academic project at ISIMM. See the (#-roadmap) for what's coming next.
 
-(docs/prototype.jpg)
+![Prototype](docs/prototype.jpg)
 
 ---
 
@@ -23,15 +23,15 @@ An automated greenhouse system built around an **Arduino Mega**. It monitors tem
 
 ```
 ┌────────────────────┐      ┌──────────────┐      ┌────────────────────┐
-│  Sensors                   │      │                   │      │             Actuators     │
-│  DHT11, soil,              │───▶│ Arduino Mega      │───▶│  pumps, heater,            │
-│  water level               │      │  (control)        │      │  fan, LEDs, buzzer        │
+│  Sensors           │      │              │      │      Actuators     │
+│  DHT11, soil,      │────▶│ Arduino Mega │─────▶│  pumps, heater,    │
+│  water level       │      │  (control)   │      │  fan, LEDs, buzzer │
 └────────────────────┘      └──────┬───────┘      └────────────────────┘
-                                              │
-                                              ▼
-                                    ┌──────────────┐
-                                    │   I2C LCD         │
-                                    └──────────────┘
+                                   │
+                                   ▼
+                            ┌──────────────┐
+                            │   I2C LCD    │
+                            └──────────────┘
 
         Web dashboard (HTML/CSS/JS) + MySQL backend on XAMPP
 ```
@@ -39,7 +39,6 @@ An automated greenhouse system built around an **Arduino Mega**. It monitors tem
 ---
 
 ## 🔧 Hardware
-┌────────────────────────────────────────────────────────────────────┐
 |       Component      |                     Role                    |
 |----------------------|---------------------------------------------|
 | Arduino Mega         | Main controller (sensors, actuators, logic) |
@@ -52,7 +51,8 @@ An automated greenhouse system built around an **Arduino Mega**. It monitors tem
 | LEDs                 | Lighting                                    |
 | Buzzer               | Alerts                                      |
 | I2C LCD              | Local display                               |
-└────────────────────────────────────────────────────────────────────┘
+
+
 Wiring diagram:
 
 ![Wiring diagram](docs/wiring.png)
@@ -118,6 +118,7 @@ Wire the components following `docs/wiring.png`.
 
 - [ ] Connect the Arduino to an ESP32 via TX/RX and use its WiFi/BLE features
 - [ ] Develop an Android dashboard app and connect it to the prototype
+- [ ] Include a more reliable and renwable power source (solar panels)
 - [ ] Improve documentation and add automated tests
 
 ---
@@ -141,4 +142,4 @@ Feedback and suggestions are welcome. Feel free to open an issue.
 
 ## 📄 License
 
-This project is licensed under the MIT License. See (LICENSE) for details.
+This project is licensed under the MIT License. See [LICENCE](LICENSE) for details.
