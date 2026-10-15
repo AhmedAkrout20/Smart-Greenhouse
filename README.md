@@ -2,7 +2,7 @@
 
 An automated greenhouse system built around an **Arduino Mega**. It monitors temperature, humidity, soil moisture and water level, controls pumps, a heater, a fan and lighting, and comes with a **web dashboard** featuring a built-in simulation mode.
 
-> **Status:** v1.0, an academic project at ISIMM. See the [Roadmap](#L118) for what's coming next.
+> **Status:** v1.0, an academic project at ISIMM. See the [Roadmap](#roadmap) for what's coming next.
 
 ![Prototype](docs/prototype.jpg)
 
