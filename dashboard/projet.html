@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/home/ahmed/smart_greenhouse/server/templates/style2.css">
+    <title>Smart Greenhouse Management System</title>
+</head>
+<body>
+
+<div class="bubbles">
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+    <div class="nav-container">
+        <!-- LOGO: far left -->
+        <a class="logo" href="/opt/lampp/htdocs/smart_greenhouse/main.html">
+            <span><img src="/home/ahmed/Downloads/eco-house.png" alt="Home" height="32px" width="32px"></span>
+            <span><b>Smart Greenhouse</b></span>
+        </a>
+
+        <div class="nav-divider"></div>
+
+        <!-- NAV LINKS: all in one row -->
+        <ul class="nav-links">
+            <li class="nav-link active"      onclick="showPage('home', this)">        <span><img src="/home/ahmed/Downloads/house.png" alt="Home" height="20px" width="20px"></span><span><b>Home</b></span></li>
+            <li class="nav-link"             onclick="showPage('visualization', this)"><span><img src="/home/ahmed/Downloads/icons8-visualization-64.png" alt="Visualization" height="20px" width="20px"></span><span><b>Visualization</b></span></li>
+            <li class="nav-link"             onclick="showPage('dashboard', this)">    <span><img src="/home/ahmed/Downloads/dashboard.png" alt="Dashboard" height="20px" width="20px"></span><span><b>Dashboard</b></span></li>
+            <li class="nav-link"             onclick="showPage('analytics', this)">    <span><img src="/home/ahmed/Downloads/analysis.png" alt="Analytics" height="20px" width="20px"></span><span><b>Analytics</b></span></li>
+            <li class="nav-link"             onclick="showPage('control', this)">      <span><img src="/home/ahmed/Downloads/security.png" alt="Control" height="20px" width="20px"></span><span><b>Control</b></span></li>
+            <li class="nav-link"             onclick="showPage('alerts', this)">       <span><img src="/home/ahmed/Downloads/warning.png" alt="Alerts" height="20px" width="20px"></span><span><b>Alerts</b></span></li>
+            <li class="nav-link"             onclick="showPage('settings', this)">     <span><img src="/home/ahmed/Downloads/settings.png" alt="Settings" height="20px" width="20px"></span><span><b>Settings</b></span></li>
+            <li class="nav-link"             onclick="showPage('logs', this)">         <span><img src="/home/ahmed/Downloads/log.png" alt="Logs" height="20px" width="20px"></span><span><b>Logs</b></span></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- ===== HOME PAGE ===== -->
+    <div id="home" class="page active">
+        <div class="header">
+            <h1><span><img src="/home/ahmed/Downloads/eco-house.png" alt="Home" height="40px" width="40px"></span> Smart Greenhouse Management System</h1>
+            <p>Complete monitoring and control solution</p>
+            <div class="status-badge status-standby" id="systemStatusHome">STANDBY</div>
+        </div>
+        <div class="grid">
+            <div class="card stat-card">
+                <div class="stat-value" id="homeTempValue">25°C</div>
+                <div class="stat-label">Current Temperature</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="homeHumValue">60%</div>
+                <div class="stat-label">Current Humidity</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="homeWaterValue">✓</div>
+                <div class="stat-label">Water Status</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="homeStateValue">0</div>
+                <div class="stat-label">System State</div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn btn-start" onclick="startSystem()">▶ START SYSTEM</button>
+            <button class="btn btn-stop" onclick="stopSystem()" disabled id="stopBtnHome">⏹ STOP SYSTEM</button>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Quick Overview</div>
+            <canvas id="homeChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ===== VISUALIZATION PAGE ===== -->
+    <div id="visualization" class="page">
+        <div class="svg-outer-wrap">
+            <div class="header" style="margin-bottom:20px;">
+                <h1>🎬 System Visualization</h1>
+                <p>Real-Time Animated Plant Watering System</p>
+                <div class="status-badge status-standby" id="systemStatusViz">STANDBY</div>
+            </div>
+
+            <div class="viz-bg">
+                <svg id="systemSVG" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4fc3f7;stop-opacity:1">
+                                <animate attributeName="stop-color" values="#4fc3f7;#29b6f6;#03a9f4;#4fc3f7" dur="3s" repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#0277bd;stop-opacity:1"/>
+                        </linearGradient>
+                        <radialGradient id="fireGradient">
+                            <stop offset="0%" style="stop-color:#ff9800;stop-opacity:1"/>
+                            <stop offset="50%" style="stop-color:#ff5722;stop-opacity:0.8"/>
+                            <stop offset="100%" style="stop-color:#d32f2f;stop-opacity:0.3"/>
+                        </radialGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="neonGlow">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <radialGradient id="electricGradient">
+                            <stop offset="0%" style="stop-color:#ffeb3b;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#ffc107;stop-opacity:0"/>
+                        </radialGradient>
+                        <clipPath id="tankClip1"><rect x="52" y="102" width="196" height="246" rx="8"/></clipPath>
+                        <clipPath id="tankClip2"><rect x="302" y="102" width="196" height="246" rx="8"/></clipPath>
+                        <linearGradient id="funnelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#ffd54f"/>
+                            <stop offset="100%" style="stop-color:#ffb300"/>
+                        </linearGradient>
+                        <linearGradient id="soilGrad">
+                            <stop offset="0%" style="stop-color:#6d4c41"/>
+                            <stop offset="100%" style="stop-color:#3e2723"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Background grid -->
+                    <g opacity="0.08">
+                        <line x1="0" y1="100" x2="1200" y2="100" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="200" x2="1200" y2="200" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="300" x2="1200" y2="300" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="400" x2="1200" y2="400" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="500" x2="1200" y2="500" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="600" x2="1200" y2="600" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="700" x2="1200" y2="700" stroke="#667eea" stroke-width="1"/>
+                        <line x1="0" y1="800" x2="1200" y2="800" stroke="#667eea" stroke-width="1"/>
+                    </g>
+
+                    <text x="600" y="42" text-anchor="middle" font-size="26" font-weight="bold" fill="#4fc3f7" filter="url(#neonGlow)">SMART WATERING SYSTEM — LIVE</text>
+
+                    <!-- RESERVOIR 1 -->
+                    <text x="150" y="85" text-anchor="middle" font-size="16" font-weight="bold" fill="#4fc3f7" filter="url(#neonGlow)">RESERVOIR 1</text>
+                    <rect x="50" y="100" width="200" height="250" rx="10" fill="url(#waterGradient)" opacity="0.1" stroke="#4fc3f7" stroke-width="3" filter="url(#glow)"/>
+                    <g clip-path="url(#tankClip1)">
+                        <rect id="svgWaterLevel1" x="55" y="280" width="190" height="65" fill="url(#waterGradient)" opacity="0.8"/>
+                        <circle cx="100" cy="310" r="3" fill="#fff" opacity="0.6">
+                            <animate attributeName="cy" values="340;285;340" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="160" cy="315" r="2" fill="#fff" opacity="0.5">
+                            <animate attributeName="cy" values="340;290;340" dur="2.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.5;0;0.5" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                    </g>
+                    <!-- Water sensor -->
+                    <rect x="232" y="295" width="18" height="35" fill="#ff9800" stroke="#ff5722" stroke-width="2" rx="3" filter="url(#glow)"/>
+                    <circle id="svgWaterSensor" cx="241" cy="315" r="8" fill="#4caf50">
+                        <animate attributeName="r" values="8;10;8" dur="1.2s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <!-- 5V PUMP -->
+                    <rect x="110" y="380" width="80" height="48" fill="#a8edea" stroke="#00bcd4" stroke-width="2" rx="8" filter="url(#glow)"/>
+                    <text x="150" y="408" text-anchor="middle" font-size="13" font-weight="bold" fill="#01579b">5V PUMP</text>
+                    <circle id="svgPump5VIndicator" cx="150" cy="368" r="9" fill="#e0e0e0"/>
+
+                    <!-- Pipe 1: Reservoir1 → Reservoir2 -->
+                    <path d="M150 350 L150 455 L400 455 L400 350" stroke="#03a9f4" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.5" filter="url(#glow)"/>
+                    <!-- Animated water on pipe 1 -->
+                    <circle id="svgWaterParticle1" cx="150" cy="380" r="7" fill="#29b6f6" opacity="0">
+                        <animateMotion dur="2.2s" repeatCount="indefinite" begin="indefinite" id="svgFlow1">
+                            <mpath href="#svgPipePath1"/>
+                        </animateMotion>
+                    </circle>
+                    <path id="svgPipePath1" d="M150 350 L150 455 L400 455 L400 350" fill="none"/>
+
+                    <!-- RESERVOIR 2 -->
+                    <text x="400" y="85" text-anchor="middle" font-size="16" font-weight="bold" fill="#4fc3f7" filter="url(#neonGlow)">RESERVOIR 2</text>
+                    <rect x="300" y="100" width="200" height="250" rx="10" fill="url(#waterGradient)" opacity="0.1" stroke="#4fc3f7" stroke-width="3" filter="url(#glow)"/>
+                    <g clip-path="url(#tankClip2)">
+                        <rect id="svgWaterLevel2" x="305" y="280" width="190" height="65" fill="url(#waterGradient)" opacity="0.8"/>
+                        <circle cx="360" cy="305" r="3" fill="#fff" opacity="0.6">
+                            <animate attributeName="cy" values="340;285;340" dur="2.8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;0;0.6" dur="2.8s" repeatCount="indefinite"/>
+                        </circle>
+                    </g>
+
+                    <!-- 12V PUMP -->
+                    <rect x="360" y="380" width="80" height="48" fill="#fed6e3" stroke="#e91e63" stroke-width="2" rx="8" filter="url(#glow)"/>
+                    <text x="400" y="408" text-anchor="middle" font-size="13" font-weight="bold" fill="#880e4f">12V PUMP</text>
+                    <circle id="svgPump12VIndicator" cx="400" cy="368" r="9" fill="#e0e0e0"/>
+
+                    <!-- Pipe 2: Reservoir2 → Funnel -->
+                    <path d="M400 350 L400 455 L650 455 L650 480" stroke="#03a9f4" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.5" filter="url(#glow)"/>
+                    <circle id="svgWaterParticle2" cx="400" cy="380" r="7" fill="#29b6f6" opacity="0">
+                        <animateMotion dur="2.2s" repeatCount="indefinite" begin="indefinite" id="svgFlow2">
+                            <mpath href="#svgPipePath2"/>
+                        </animateMotion>
+                    </circle>
+                    <path id="svgPipePath2" d="M400 350 L400 455 L650 455 L650 480" fill="none"/>
+
+                    <!-- Water drops from funnel -->
+                    <circle id="svgWaterDrop" cx="650" cy="550" r="6" fill="#29b6f6" opacity="0">
+                        <animate id="svgDropAnim" attributeName="cy" values="545;625;545" dur="1.4s" repeatCount="indefinite" begin="indefinite"/>
+                        <animate attributeName="opacity" values="0;1;0" dur="1.4s" repeatCount="indefinite" begin="indefinite"/>
+                    </circle>
+
+                    <!-- FUNNEL -->
+                    <text x="650" y="468" text-anchor="middle" font-size="14" font-weight="bold" fill="#ff6f00" filter="url(#neonGlow)">FUNNEL</text>
+                    <polygon points="620,480 680,480 670,540 630,540" fill="url(#funnelGrad)" stroke="#ff6f00" stroke-width="2" filter="url(#glow)"/>
+
+                    <!-- SOIL SENSOR -->
+                    <rect x="600" y="625" width="100" height="80" fill="url(#soilGrad)" stroke="#4e342e" stroke-width="2" rx="8" filter="url(#glow)"/>
+                    <text x="650" y="653" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">SOIL</text>
+                    <text x="650" y="673" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">SENSOR</text>
+                    <circle id="svgSoilIndicator" cx="650" cy="690" r="9" fill="#795548">
+                        <animate attributeName="fill" values="#795548;#8bc34a;#795548" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <!-- HEATER -->
+                    <rect x="750" y="630" width="100" height="55" fill="#ff6b6b" stroke="#d32f2f" stroke-width="2" rx="8" filter="url(#glow)"/>
+                    <text x="800" y="662" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">HEATER</text>
+                    <circle id="svgHeaterIndicator" cx="800" cy="620" r="9" fill="#e0e0e0"/>
+                    <!-- Flames (hidden when off) -->
+                    <g id="svgFlames" opacity="0">
+                        <ellipse cx="760" cy="640" rx="7" ry="13" fill="url(#fireGradient)">
+                            <animate attributeName="ry" values="13;18;13" dur="0.5s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="778" cy="645" rx="5" ry="10" fill="#ff9800">
+                            <animate attributeName="ry" values="10;14;10" dur="0.6s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="795" cy="642" rx="6" ry="11" fill="#ff5722">
+                            <animate attributeName="ry" values="11;16;11" dur="0.55s" repeatCount="indefinite"/>
+                        </ellipse>
+                    </g>
+
+                    <!-- DHT11 SENSOR -->
+                    <rect x="80" y="500" width="140" height="100" fill="#e1f5fe" stroke="#0277bd" stroke-width="2" rx="10" filter="url(#glow)"/>
+                    <text x="150" y="528" text-anchor="middle" font-size="14" font-weight="bold" fill="#01579b">DHT11</text>
+                    <text x="150" y="556" text-anchor="middle" font-size="20" font-weight="bold" fill="#667eea" id="vizTemp">25.0°C</text>
+                    <text x="150" y="580" text-anchor="middle" font-size="20" font-weight="bold" fill="#43e97b" id="vizHum">60.0%</text>
+
+                    <!-- TEMP HEATER (left panel) -->
+                    <rect x="80" y="625" width="140" height="55" fill="#ff6b6b" stroke="#d32f2f" stroke-width="2" rx="8" filter="url(#glow)"/>
+                    <text x="150" y="657" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">TEMP HEATER</text>
+                    <circle id="svgTempHeaterIndicator" cx="150" cy="695" r="8" fill="#e0e0e0"/>
+
+                    <!-- COOLING FAN -->
+                    <circle cx="150" cy="780" r="42" fill="#74ebd5" stroke="#00acc1" stroke-width="2" filter="url(#glow)"/>
+                    <g id="svgFanBlades" transform-origin="150 780">
+                        <ellipse cx="150" cy="752" rx="7" ry="22" fill="#006064" opacity="0.85"/>
+                        <ellipse cx="150" cy="808" rx="7" ry="22" fill="#006064" opacity="0.85"/>
+                        <ellipse cx="122" cy="780" rx="22" ry="7" fill="#006064" opacity="0.85"/>
+                        <ellipse cx="178" cy="780" rx="22" ry="7" fill="#006064" opacity="0.85"/>
+                    </g>
+                    <circle cx="150" cy="780" r="9" fill="#00acc1"/>
+                    <text x="150" y="845" text-anchor="middle" font-size="13" font-weight="bold" fill="#00acc1" filter="url(#neonGlow)">COOLING FAN</text>
+                    <circle id="svgFanIndicator" cx="150" cy="858" r="8" fill="#e0e0e0"/>
+
+                    <!-- HEAT WAVES (for heater) -->
+                    <g id="svgHeatWave1" opacity="0">
+                        <path d="M755 628 Q770 615 785 628 Q800 615 815 628" stroke="#ff9800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    </g>
+                    <g id="svgHeatWave2" opacity="0">
+                        <path d="M758 618 Q773 605 788 618 Q803 605 818 618" stroke="#ff5722" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </g>
+                    <g id="svgHeatWave3" opacity="0">
+                        <path d="M761 608 Q776 595 791 608 Q806 595 821 608" stroke="#f44336" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- STATE DISPLAY -->
+                    <rect x="900" y="100" width="280" height="120" fill="rgba(102,126,234,0.18)" stroke="#667eea" stroke-width="3" rx="15" filter="url(#neonGlow)"/>
+                    <text x="1040" y="138" text-anchor="middle" font-size="18" font-weight="bold" fill="#fff">SYSTEM STATE</text>
+                    <text x="1040" y="182" text-anchor="middle" font-size="26" font-weight="bold" fill="#4fc3f7" id="vizState" filter="url(#neonGlow)">STANDBY</text>
+
+                    <!-- CYCLE STEPS -->
+                    <rect x="900" y="240" width="280" height="520" fill="rgba(118,75,162,0.18)" stroke="#764ba2" stroke-width="3" rx="15" filter="url(#glow)"/>
+                    <text x="1040" y="275" text-anchor="middle" font-size="17" font-weight="bold" fill="#fff">CYCLE STEPS</text>
+                    <g id="svgStep0"><rect x="920" y="295" width="240" height="56" fill="#f0f0f0" stroke="#999" stroke-width="1.5" rx="8" opacity="0.3"/><text x="1040" y="328" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">0: STANDBY</text></g>
+                    <g id="svgStep1"><rect x="920" y="368" width="240" height="56" fill="#f0f0f0" stroke="#999" stroke-width="1.5" rx="8" opacity="0.3"/><text x="1040" y="401" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">1: TEMP CONTROL</text></g>
+                    <g id="svgStep2"><rect x="920" y="441" width="240" height="56" fill="#f0f0f0" stroke="#999" stroke-width="1.5" rx="8" opacity="0.3"/><text x="1040" y="474" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">2: 5V PUMP</text></g>
+                    <g id="svgStep3"><rect x="920" y="514" width="240" height="56" fill="#f0f0f0" stroke="#999" stroke-width="1.5" rx="8" opacity="0.3"/><text x="1040" y="547" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">3: 12V PUMP</text></g>
+                    <g id="svgStep4"><rect x="920" y="587" width="240" height="56" fill="#f0f0f0" stroke="#999" stroke-width="1.5" rx="8" opacity="0.3"/><text x="1040" y="620" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">4: HEATER DRYING</text></g>
+                    <g id="svgStep5"><rect x="920" y="660" width="240" height="56" fill="#f0f0f0" stroke="#999" stroke-width="1.5" rx="8" opacity="0.3"/><text x="1040" y="693" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">5: COMPLETE</text></g>
+
+                    <!-- LEDS -->
+                    <circle id="svgGreenLED" cx="950" cy="800" r="13" fill="#4caf50" stroke="#2e7d32" stroke-width="2" filter="url(#neonGlow)">
+                        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <text x="975" y="806" font-size="13" fill="#ccc">Green (Always ON)</text>
+                    <circle id="svgYellowLED" cx="950" cy="836" r="13" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    <text x="975" y="842" font-size="13" fill="#ccc">Yellow (12V Pump)</text>
+                    <circle id="svgRedLED" cx="950" cy="872" r="13" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    <text x="975" y="878" font-size="13" fill="#ccc">Red (Temp Alert)</text>
+                </svg>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-icon" style="background:linear-gradient(45deg,#4fc3f7,#0277bd)"></div><span>💧 Water Flow Active</span></div>
+                <div class="legend-item"><div class="legend-icon" style="background:linear-gradient(45deg,#4caf50,#2e7d32)"></div><span>✅ Component ON</span></div>
+                <div class="legend-item"><div class="legend-icon" style="background:#e0e0e0"></div><span>⭕ Component OFF</span></div>
+                <div class="legend-item"><div class="legend-icon" style="background:linear-gradient(45deg,#ff9800,#d32f2f)"></div><span>🔥 Heat Active</span></div>
+            </div>
+
+            <div class="controls" style="margin-top:20px;">
+                <button class="btn btn-start" onclick="startSystem()">▶ START SYSTEM</button>
+                <button class="btn btn-stop" onclick="stopSystem()">⏹ STOP SYSTEM</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div id="dashboard" class="page">
+        <div class="header">
+            <h1>📊 Real-Time Dashboard</h1>
+            <p>Live monitoring of all sensors and actuators</p>
+            <div class="status-badge status-standby" id="systemStatus">STANDBY</div>
+        </div>
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn" onclick="startSystem()">▶ START</button>
+            <button class="btn btn-stop" id="stopBtn" onclick="stopSystem()" disabled>⏹ STOP</button>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon temp-cool" id="tempIcon">🌡️</div>
+                    <div class="card-title">Temperature</div>
+                </div>
+                <div class="card-value" id="tempValue">25</div>
+                <div class="card-unit">°C</div>
+                <div class="progress-bar"><div class="progress-fill" id="tempProgress"></div></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon humidity-icon">💧</div>
+                    <div class="card-title">Humidity</div>
+                </div>
+                <div class="card-value" id="humValue">60</div>
+                <div class="card-unit">%</div>
+                <div class="progress-bar"><div class="progress-fill" id="humProgress"></div></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon soil-icon">🌿</div>
+                    <div class="card-title">Soil Moisture</div>
+                </div>
+                <div class="card-value" id="soilValue">500</div>
+                <div class="card-unit">level</div>
+                <div class="progress-bar"><div class="progress-fill" id="soilProgress"></div></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon water-icon">🚰</div>
+                    <div class="card-title">Water Level</div>
+                </div>
+                <div class="card-value" id="waterValue">✓</div>
+                <div class="card-unit" id="waterStatus">OK</div>
+                <div class="device-status">
+                    <div class="status-indicator status-on" id="waterIndicator"></div>
+                    <span id="waterText">Water Available</span>
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header"><div class="card-icon pump-icon">⚡</div><div class="card-title">5V Pump</div></div>
+                <div class="device-status"><div class="status-indicator status-off" id="p5Indicator"></div><span id="p5Status">OFF</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><div class="card-icon pump-icon">⚡</div><div class="card-title">12V Pump</div></div>
+                <div class="device-status"><div class="status-indicator status-off" id="p12Indicator"></div><span id="p12Status">OFF</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><div class="card-icon heater-icon">🔥</div><div class="card-title">Heater</div></div>
+                <div class="device-status"><div class="status-indicator status-off" id="heaterIndicator"></div><span id="heaterStatus">OFF</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><div class="card-icon fan-icon">🌀</div><div class="card-title">Cooling Fan</div></div>
+                <div class="device-status"><div class="status-indicator status-off" id="fanIndicator"></div><span id="fanStatus">OFF</span></div>
+            </div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">System State</div>
+            <div class="state-indicator">
+                <div class="state-step active" id="state0"><div class="state-step-number">0</div><div class="state-step-name">Standby</div></div>
+                <div class="state-step" id="state1"><div class="state-step-number">1</div><div class="state-step-name">Temp Control</div></div>
+                <div class="state-step" id="state2"><div class="state-step-number">2</div><div class="state-step-name">5V Pump</div></div>
+                <div class="state-step" id="state3"><div class="state-step-number">3</div><div class="state-step-name">12V Pump</div></div>
+                <div class="state-step" id="state4"><div class="state-step-number">4</div><div class="state-step-name">Heater</div></div>
+                <div class="state-step" id="state5"><div class="state-step-number">5</div><div class="state-step-name">Complete</div></div>
+            </div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title">Live Trends</div>
+            <canvas id="dashboardChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ===== ANALYTICS PAGE ===== -->
+    <div id="analytics" class="page">
+        <div class="header">
+            <h1>📈 Analytics & History</h1>
+            <p>Historical data and trends analysis</p>
+        </div>
+        <div class="chart-container">
+            <div class="tab-selector">
+                <button class="tab-btn active" onclick="setAnalyticsPeriod('24h', this)">Last 24 Hours</button>
+                <button class="tab-btn" onclick="setAnalyticsPeriod('7d', this)">Last 7 Days</button>
+                <button class="tab-btn" onclick="setAnalyticsPeriod('30d', this)">Last 30 Days</button>
+            </div>
+            <canvas id="analyticsChart"></canvas>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Temperature Statistics</div><br>
+                <div class="setting-item"><span>Average:</span><span id="tempAvg">25.3°C</span></div>
+                <div class="setting-item"><span>Min:</span><span id="tempMin">18.5°C</span></div>
+                <div class="setting-item"><span>Max:</span><span id="tempMax">32.1°C</span></div>
+            </div>
+            <div class="card">
+                <div class="card-title">Humidity Statistics</div><br>
+                <div class="setting-item"><span>Average:</span><span id="humAvg">62.4%</span></div>
+                <div class="setting-item"><span>Min:</span><span id="humMin">35.2%</span></div>
+                <div class="setting-item"><span>Max:</span><span id="humMax">88.7%</span></div>
+            </div>
+            <div class="card">
+                <div class="card-title">System Activity</div><br>
+                <div class="setting-item"><span>Total Cycles:</span><span id="totalCycles">42</span></div>
+                <div class="setting-item"><span>Last Watering:</span><span id="lastWatering">2 hours ago</span></div>
+                <div class="setting-item"><span>Uptime:</span><span id="uptime">15h 32m</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONTROL PAGE ===== -->
+    <div id="control" class="page">
+        <div class="header">
+            <h1>🎛️ Manual Control Panel</h1>
+            <p>Override automatic mode and control devices manually</p>
+        </div>
+        <div class="card">
+            <div class="setting-item">
+                <div>
+                    <div class="setting-label">Control Mode</div>
+                    <div style="color:#999;font-size:0.9em" id="modeDescription">Automatic mode active</div>
+                </div>
+                <label class="switch"><input type="checkbox" id="modeSwitch" onchange="toggleMode()"><span class="slider"></span></label>
+            </div>
+        </div><br>
+        <div id="manualControls" style="display:none">
+            <div class="grid">
+                <div class="card">
+                    <div class="control-item">
+                        <div class="control-info"><div class="control-name">5V Pump</div><div class="control-status" id="manualP5Status">OFF</div></div>
+                        <label class="switch"><input type="checkbox" onchange="toggleDevice('p5', this.checked)"><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="control-item">
+                        <div class="control-info"><div class="control-name">12V Pump</div><div class="control-status" id="manualP12Status">OFF</div></div>
+                        <label class="switch"><input type="checkbox" onchange="toggleDevice('p12', this.checked)"><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="control-item">
+                        <div class="control-info"><div class="control-name">Heater</div><div class="control-status" id="manualHeaterStatus">OFF</div></div>
+                        <label class="switch"><input type="checkbox" onchange="toggleDevice('heater', this.checked)"><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="control-item">
+                        <div class="control-info"><div class="control-name">Cooling Fan</div><div class="control-status" id="manualFanStatus">OFF</div></div>
+                        <label class="switch"><input type="checkbox" onchange="toggleDevice('fan', this.checked)"><span class="slider"></span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="autoMessage" class="chart-container">
+            <div style="text-align:center;padding:40px;color:#999">
+                <div style="font-size:3em;margin-bottom:20px">🤖</div>
+                <div style="font-size:1.2em">System is in AUTO mode</div>
+                <div style="margin-top:10px">Toggle switch above to enable manual control</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ALERTS PAGE ===== -->
+    <div id="alerts" class="page">
+        <div class="header">
+            <h1>🚨 Alerts & Notifications</h1>
+            <p>System warnings and important events</p>
+        </div>
+        <div class="card">
+            <div class="card-title">Active Alerts</div><br>
+            <div id="activeAlerts">
+                <div class="alert alert-info">
+                    <div class="alert-icon">ℹ️</div>
+                    <div class="alert-content">
+                        <div class="alert-title">System Ready</div>
+                        <div>All systems operational</div>
+                        <div class="alert-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+        </div><br>
+        <div class="card">
+            <div class="card-title">Recent Alerts History</div><br>
+            <div id="alertHistory"></div>
+        </div>
+    </div>
+
+    <!-- ===== SETTINGS PAGE ===== -->
+    <div id="settings" class="page">
+        <div class="header">
+            <h1>⚙️ System Settings</h1>
+            <p>Configure thresholds and system parameters</p>
+        </div>
+        <div class="card">
+            <div class="card-title">Temperature Thresholds</div><br>
+            <div class="setting-item"><span class="setting-label">Minimum Temperature (°C)</span><input type="number" class="setting-input" id="minTemp" value="20" onchange="saveSettings()"></div>
+            <div class="setting-item"><span class="setting-label">Maximum Temperature (°C)</span><input type="number" class="setting-input" id="maxTemp" value="30" onchange="saveSettings()"></div>
+            <div class="setting-item"><span class="setting-label">Target Temperature (°C)</span><input type="number" class="setting-input" id="targetTemp" value="25" onchange="saveSettings()"></div>
+        </div><br>
+        <div class="card">
+            <div class="card-title">Watering Settings</div><br>
+            <div class="setting-item"><span class="setting-label">Soil Moisture Threshold</span><input type="number" class="setting-input" id="soilThreshold" value="400" onchange="saveSettings()"></div>
+            <div class="setting-item"><span class="setting-label">Pump Duration (seconds)</span><input type="number" class="setting-input" id="pumpDuration" value="10" onchange="saveSettings()"></div>
+        </div><br>
+        <div class="card">
+            <div class="card-title">System Preferences</div><br>
+            <div class="setting-item"><span class="setting-label">Auto-restart on completion</span><label class="switch"><input type="checkbox" id="autoRestart"><span class="slider"></span></label></div>
+            <div class="setting-item"><span class="setting-label">Enable notifications</span><label class="switch"><input type="checkbox" id="enableNotifs" checked><span class="slider"></span></label></div>
+        </div><br>
+        <div class="controls">
+            <button class="btn btn-start" onclick="saveSettings()">💾 Save Settings</button>
+            <button class="btn btn-stop" onclick="resetSettings()">🔄 Reset to Default</button>
+        </div>
+    </div>
+
+    <!-- ===== LOGS PAGE ===== -->
+    <div id="logs" class="page">
+        <div class="header">
+            <h1>📋 System Logs</h1>
+            <p>Detailed activity log of all system events</p>
+        </div>
+        <div class="card">
+            <div class="card-title">Recent Activity</div><br>
+            <div id="logContainer"></div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        <p><strong>Projet réalisé par:</strong> Ahmed Akrout</p>
+        <p><strong>Encadré par:</strong> Mme. Sabrine Bannour</p>
+        <p style="margin-top:10px;font-size:0.9em">Smart Greenhouse Management System</p>
+    </div>
+
+</div><!-- end .container -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ===== GLOBAL STATE =====
+let temp = 25, hum = 60, soil = 500, water = 1, state = 0;
+let p5 = 0, p12 = 0, heater = 0, fan = 0;
+let isRunning = false, manualMode = false;
+let stateTimer = 0;
+let logs = [], alerts = [];
+let settings = { minTemp: 20, maxTemp: 30, targetTemp: 25, soilThreshold: 400, pumpDuration: 10 };
+
+const stateNames = ['STANDBY', 'TEMP CONTROL', '5V PUMP', '12V PUMP', 'HEATER', 'COMPLETE'];
+
+// ===== CHARTS =====
+let homeChart, dashboardChart, analyticsChart;
+const tempData = [], humData = [], labels = [];
+const maxDataPoints = 20;
+
+function initCharts() {
+    homeChart = new Chart(document.getElementById('homeChart'), {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Temperature', data: tempData, borderColor: '#667eea', fill: false, tension: 0.4 },
+                { label: 'Humidity',    data: humData,  borderColor: '#43e97b', fill: false, tension: 0.4 }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: true }
+    });
+
+    dashboardChart = new Chart(document.getElementById('dashboardChart'), {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Temperature (°C)', data: tempData, borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', tension: 0.4, fill: true },
+                { label: 'Humidity (%)',     data: humData,  borderColor: '#43e97b', backgroundColor: 'rgba(67,233,123,0.1)',  tension: 0.4, fill: true }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+    });
+
+    analyticsChart = new Chart(document.getElementById('analyticsChart'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                { label: 'Temperature', data: [], borderColor: '#667eea', fill: true, backgroundColor: 'rgba(102,126,234,0.1)' },
+                { label: 'Humidity',    data: [], borderColor: '#43e97b', fill: true, backgroundColor: 'rgba(67,233,123,0.1)' }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+    });
+}
+
+// ===== NAVIGATION =====
+function showPage(pageId, clickedEl) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    if (clickedEl) clickedEl.classList.add('active');
+}
+
+// ===== SYSTEM CONTROL =====
+function startSystem() {
+    if (!water) { addAlert('error', 'Water Error', 'Cannot start: Water reservoir is empty!'); return; }
+    if (manualMode) { addAlert('warning', 'Manual Mode Active', 'Switch to AUTO mode first'); return; }
+    isRunning = true; state = 1; stateTimer = 0;
+    addLog('System started — Temperature control initiated');
+    addAlert('success', 'System Started', 'Temperature control initiated...');
+    updateButtons();
+}
+
+function stopSystem() {
+    isRunning = false; state = 0; stateTimer = 0;
+    p5 = 0; p12 = 0; heater = 0; fan = 0;
+    addLog('System stopped by user');
+    addAlert('info', 'System Stopped', 'All operations halted');
+    updateButtons();
+}
+
+function updateButtons() {
+    document.getElementById('startBtn').disabled   = isRunning;
+    document.getElementById('stopBtn').disabled    = !isRunning;
+    document.getElementById('stopBtnHome').disabled = !isRunning;
+}
+
+// ===== MANUAL CONTROL =====
+function toggleMode() {
+    manualMode = document.getElementById('modeSwitch').checked;
+    document.getElementById('manualControls').style.display = manualMode ? 'block' : 'none';
+    document.getElementById('autoMessage').style.display    = manualMode ? 'none'  : 'block';
+    document.getElementById('modeDescription').textContent  = manualMode
+        ? 'Manual control enabled — devices can be controlled individually'
+        : 'Automatic mode active';
+    addLog(manualMode ? 'Switched to MANUAL mode' : 'Switched to AUTO mode');
+    if (manualMode && isRunning) stopSystem();
+}
+
+function toggleDevice(device, val) {
+    if (!manualMode) return;
+    const statusMap = { p5: 'manualP5Status', p12: 'manualP12Status', heater: 'manualHeaterStatus', fan: 'manualFanStatus' };
+    const nameMap   = { p5: '5V Pump', p12: '12V Pump', heater: 'Heater', fan: 'Cooling Fan' };
+    window[device] = val ? 1 : 0;
+    document.getElementById(statusMap[device]).textContent = val ? 'ON' : 'OFF';
+    addLog(`${nameMap[device]} manually turned ${val ? 'ON' : 'OFF'}`);
+}
+
+// ===== SIMULATION =====
+function simulateEnvironment() {
+    temp += (Math.random() - 0.5) * 0.3;
+    if (heater) temp += 0.5;
+    if (fan)    temp -= 0.5;
+    temp = Math.max(15, Math.min(40, temp));
+
+    hum += (Math.random() - 0.5) * 2;
+    if (temp > 25) hum -= 0.2;
+    if (temp < 25) hum += 0.2;
+    hum = Math.max(30, Math.min(90, hum));
+
+    soil += (Math.random() - 0.5) * 10;
+    soil = Math.max(200, Math.min(800, soil));
+}
+
+function runStateMachine() {
+    if (!isRunning || manualMode) {
+        state = 0;
+        if (!manualMode) { p5 = 0; p12 = 0; heater = 0; fan = 0; }
+        return;
+    }
+    stateTimer++;
+
+    switch (state) {
+        case 1: // TEMP CONTROL
+            if (temp < settings.minTemp)        { heater = 1; fan = 0; }
+            else if (temp > settings.maxTemp)   { heater = 0; fan = 1; }
+            else if (temp < settings.targetTemp){ heater = 1; fan = 0; }
+            else if (temp > settings.targetTemp){ heater = 0; fan = 1; }
+            else { heater = 0; fan = 0; }
+            if (Math.abs(temp - settings.targetTemp) <= 0.5) {
+                heater = 0; fan = 0; state = 2; stateTimer = 0;
+                addLog(`Temperature reached ${settings.targetTemp}°C — Starting 5V pump`);
+            }
+            break;
+        case 2: // 5V PUMP
+            p5 = 1;
+            if (stateTimer >= settings.pumpDuration) {
+                p5 = 0; state = 3; stateTimer = 0;
+                addLog('5V pump cycle complete — Starting 12V pump');
+            }
+            break;
+        case 3: // 12V PUMP
+            p12 = 1;
+            if (stateTimer >= settings.pumpDuration) {
+                p12 = 0; state = 4; stateTimer = 0;
+                addLog('12V pump cycle complete — Starting heater drying');
+            }
+            break;
+        case 4: // HEATER DRYING
+            heater = 1;
+            if (stateTimer >= 6) {
+                heater = 0; state = 5; stateTimer = 0;
+                addLog('Heater drying complete');
+            }
+            break;
+        case 5: // COMPLETE
+            addLog('Cycle completed successfully!');
+            addAlert('success', 'Cycle Complete', 'All operations finished!');
+            stopSystem();
+            break;
+    }
+}
+
+// ===== SVG VISUALIZATION =====
+let fanRotation = 0;
+let heatPhase = 0;
+
+function setSVGIndicator(id, on) {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('fill', on ? '#4caf50' : '#e0e0e0');
+}
+
+function updateVisualization() {
+    // Text values
+    const vt = document.getElementById('vizTemp');
+    const vh = document.getElementById('vizHum');
+    const vs = document.getElementById('vizState');
+    if (vt) vt.textContent = temp.toFixed(1) + '°C';
+    if (vh) vh.textContent = hum.toFixed(1) + '%';
+    if (vs) vs.textContent = stateNames[state];
+
+    // Status badge in viz page
+    const badge = document.getElementById('systemStatusViz');
+    if (badge) {
+        badge.textContent  = stateNames[state];
+        badge.className    = 'status-badge ' + (state === 0 ? 'status-standby' : 'status-running');
+    }
+
+    // Cycle step highlights
+    for (let i = 0; i <= 5; i++) {
+        const g = document.getElementById('svgStep' + i);
+        if (!g) continue;
+        const rect = g.querySelector('rect');
+        const text = g.querySelector('text');
+        const active = (i === state);
+        g.setAttribute('opacity', active ? '1' : '0.4');
+        if (rect) {
+            rect.setAttribute('fill',   active ? '#667eea' : '#f0f0f0');
+            rect.setAttribute('stroke', active ? '#667eea' : '#999');
+            rect.setAttribute('opacity','1');
+        }
+        if (text) text.setAttribute('fill', active ? 'white' : '#333');
+    }
+
+    // Component indicators
+    setSVGIndicator('svgPump5VIndicator',    p5);
+    setSVGIndicator('svgPump12VIndicator',   p12);
+    setSVGIndicator('svgHeaterIndicator',    heater);
+    setSVGIndicator('svgTempHeaterIndicator',heater);
+    setSVGIndicator('svgFanIndicator',       fan);
+    setSVGIndicator('svgWaterSensor',        water);
+
+    // Soil colour
+    const soilEl = document.getElementById('svgSoilIndicator');
+    if (soilEl) soilEl.setAttribute('fill', soil < 400 ? '#8bc34a' : '#795548');
+
+    // Water particles on pipe 1 (5V pump)
+    const wp1 = document.getElementById('svgWaterParticle1');
+    if (wp1) wp1.setAttribute('opacity', p5 ? '1' : '0');
+
+    // Water particles on pipe 2 (12V pump)
+    const wp2 = document.getElementById('svgWaterParticle2');
+    if (wp2) wp2.setAttribute('opacity', p12 ? '1' : '0');
+
+    // Water drop from funnel
+    const wd = document.getElementById('svgWaterDrop');
+    if (wd) wd.setAttribute('opacity', p12 ? '1' : '0');
+
+    // Heat waves
+    heatPhase = (heatPhase + 0.12) % (Math.PI * 2);
+    const hOpacity = heater ? (0.5 + Math.sin(heatPhase) * 0.4) : 0;
+    const hw1 = document.getElementById('svgHeatWave1');
+    const hw2 = document.getElementById('svgHeatWave2');
+    const hw3 = document.getElementById('svgHeatWave3');
+    if (hw1) hw1.setAttribute('opacity', hOpacity);
+    if (hw2) hw2.setAttribute('opacity', hOpacity * 0.7);
+    if (hw3) hw3.setAttribute('opacity', hOpacity * 0.5);
+
+    // Flames
+    const flames = document.getElementById('svgFlames');
+    if (flames) flames.setAttribute('opacity', heater ? '1' : '0');
+
+    // Fan rotation
+    if (fan) {
+        fanRotation = (fanRotation + 6) % 360;
+        const fb = document.getElementById('svgFanBlades');
+        if (fb) fb.setAttribute('transform', `rotate(${fanRotation}, 150, 780)`);
+    }
+
+    // LEDs
+    setSVGIndicator('svgGreenLED', 1); // always green
+    const yLED = document.getElementById('svgYellowLED');
+    if (yLED) yLED.setAttribute('fill', p12 ? '#ffeb3b' : '#e0e0e0');
+    const rLED = document.getElementById('svgRedLED');
+    if (rLED) rLED.setAttribute('fill', (temp < settings.minTemp || temp > settings.maxTemp) ? '#f44336' : '#e0e0e0');
+}
+
+// ===== LOGGING =====
+function addLog(msg) {
+    logs.unshift({ time: new Date().toLocaleTimeString(), message: msg });
+    if (logs.length > 50) logs.pop();
+    updateLogs();
+}
+function updateLogs() {
+    const c = document.getElementById('logContainer');
+    if (c) c.innerHTML = logs.map(l =>
+        `<div class="log-entry"><div class="log-time">${l.time}</div><div>${l.message}</div></div>`
+    ).join('');
+}
+
+function addAlert(type, title, msg) {
+    alerts.unshift({ type, title, message: msg, time: new Date().toLocaleTimeString() });
+    if (alerts.length > 20) alerts.pop();
+    updateAlerts();
+}
+function updateAlerts() {
+    const icons = { warning:'⚠️', error:'🔥', success:'✅', info:'ℹ️' };
+    const hist = document.getElementById('alertHistory');
+    if (hist) hist.innerHTML = alerts.slice(1).map(a =>
+        `<div class="alert alert-${a.type}">
+            <div class="alert-icon">${icons[a.type]||'ℹ️'}</div>
+            <div class="alert-content"><div class="alert-title">${a.title}</div><div>${a.message}</div><div class="alert-time">${a.time}</div></div>
+         </div>`
+    ).join('');
+    if (alerts.length > 0) {
+        const latest = alerts[0];
+        const ac = document.getElementById('activeAlerts');
+        if (ac) ac.innerHTML =
+            `<div class="alert alert-${latest.type}">
+                <div class="alert-icon">${icons[latest.type]||'ℹ️'}</div>
+                <div class="alert-content"><div class="alert-title">${latest.title}</div><div>${latest.message}</div><div class="alert-time">${latest.time}</div></div>
+             </div>`;
+    }
+}
+
+// ===== SETTINGS =====
+function saveSettings() {
+    settings.minTemp      = parseInt(document.getElementById('minTemp').value)      || 20;
+    settings.maxTemp      = parseInt(document.getElementById('maxTemp').value)      || 30;
+    settings.targetTemp   = parseInt(document.getElementById('targetTemp').value)   || 25;
+    settings.soilThreshold= parseInt(document.getElementById('soilThreshold').value)|| 400;
+    settings.pumpDuration = parseInt(document.getElementById('pumpDuration').value) || 10;
+    addLog('Settings updated');
+    addAlert('success', 'Settings Saved', 'Configuration updated successfully');
+}
+function resetSettings() {
+    document.getElementById('minTemp').value       = 20;
+    document.getElementById('maxTemp').value       = 30;
+    document.getElementById('targetTemp').value    = 25;
+    document.getElementById('soilThreshold').value = 400;
+    document.getElementById('pumpDuration').value  = 10;
+    saveSettings();
+    addAlert('info', 'Settings Reset', 'Configuration restored to defaults');
+}
+
+// ===== ANALYTICS =====
+function setAnalyticsPeriod(period, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const n = period === '24h' ? 24 : period === '7d' ? 7 : 30;
+    const nl = [], nt = [], nh = [];
+    for (let i = 0; i < n; i++) {
+        nl.push(period === '24h' ? `${i}:00` : `Day ${i+1}`);
+        nt.push(20 + Math.random() * 10);
+        nh.push(40 + Math.random() * 40);
+    }
+    analyticsChart.data.labels = nl;
+    analyticsChart.data.datasets[0].data = nt;
+    analyticsChart.data.datasets[1].data = nh;
+    analyticsChart.update();
+}
+
+// ===== DEVICE STATUS HELPER =====
+function updateDevice(device, status) {
+    const ind  = document.getElementById(device + 'Indicator');
+    const stat = document.getElementById(device + 'Status');
+    if (ind)  ind.className    = 'status-indicator ' + (status ? 'status-on' : 'status-off');
+    if (stat) stat.textContent = status ? 'ON' : 'OFF';
+}
+
+// ===== MAIN UPDATE LOOP =====
+function updateUI() {
+    simulateEnvironment();
+    runStateMachine();
+    updateVisualization();
+
+    // Dashboard values
+    document.getElementById('tempValue').textContent = temp.toFixed(1);
+    document.getElementById('humValue').textContent  = hum.toFixed(1);
+    document.getElementById('soilValue').textContent = soil.toFixed(0);
+
+    // Home stats
+    document.getElementById('homeTempValue').textContent = temp.toFixed(1) + '°C';
+    document.getElementById('homeHumValue').textContent  = hum.toFixed(1) + '%';
+    document.getElementById('homeWaterValue').textContent= water ? '✓' : '✗';
+    document.getElementById('homeStateValue').textContent= state;
+
+    // Progress bars
+    document.getElementById('tempProgress').style.width = Math.min((temp / 50) * 100, 100) + '%';
+    document.getElementById('humProgress').style.width  = hum + '%';
+    document.getElementById('soilProgress').style.width = Math.min((soil / 1000) * 100, 100) + '%';
+
+    // Temp icon
+    const ti = document.getElementById('tempIcon');
+    if (ti) ti.className = temp > 27 ? 'card-icon temp-hot' : 'card-icon temp-cool';
+
+    // Water status
+    const wi = document.getElementById('waterIndicator');
+    if (wi) {
+        wi.className = 'status-indicator ' + (water ? 'status-on' : 'status-off');
+        document.getElementById('waterText').textContent   = water ? 'Water Available' : 'No Water';
+        document.getElementById('waterValue').textContent  = water ? '✓' : '✗';
+        document.getElementById('waterStatus').textContent = water ? 'OK' : 'EMPTY';
+    }
+
+    // Device statuses
+    updateDevice('p5',     p5);
+    updateDevice('p12',    p12);
+    updateDevice('heater', heater);
+    updateDevice('fan',    fan);
+
+    // System status badges (home + dashboard)
+    ['systemStatus','systemStatusHome'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = stateNames[state];
+        el.className   = 'status-badge ' +
+            (state === 0 ? 'status-standby' :
+             (temp < settings.minTemp || temp > settings.maxTemp) ? 'status-error' : 'status-running');
+    });
+
+    // Dashboard state steps
+    for (let i = 0; i <= 5; i++) {
+        const el = document.getElementById('state' + i);
+        if (el) el.className = i === state ? 'state-step active' : 'state-step';
+    }
+
+    // Chart data
+    const now = new Date().toLocaleTimeString();
+    labels.push(now); tempData.push(temp); humData.push(hum);
+    if (labels.length > maxDataPoints) { labels.shift(); tempData.shift(); humData.shift(); }
+    if (homeChart)      homeChart.update();
+    if (dashboardChart) dashboardChart.update();
+}
+
+// ===== INIT =====
+window.onload = function () {
+    initCharts();
+    addLog('System initialized');
+    addAlert('success', 'System Ready', 'All systems operational');
+    setInterval(updateUI, 1000);
+    updateUI();
+
+    // Load analytics default tab
+    setAnalyticsPeriod('24h', document.querySelector('.tab-btn'));
+};
+</script>
+</body>
+</html>

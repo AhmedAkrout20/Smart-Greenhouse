@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Greenhouse Project</title>
+<link rel="stylesheet" href="/home/ahmed/smart_greenhouse/server/templates/style.css">
+</head>
+
+<body>
+<div class="bubbles">
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+</div>
+<div class="intro-container">
+    <center>
+    <table>
+        <tr>
+            <td>
+                <img src="/home/ahmed/Downloads/eco-house.png" 
+                width="80px" height="80px" style="border-radius: 10px;">
+            </td>
+            <td>
+                <h1>Smart Greenhouse System</h1>
+            </td>
+        </tr>
+    </table>
+    </center><br>
+
+    <p class="subtitle">
+        Smart real-time plant monitoring system</p><br>
+
+    <div class="card intro-card">
+        <h2>About Me</h2><br>
+        <table>
+            <tr>
+                <td>
+                    <img src="imagePortfolio.png" alt="Ahmed Akrout" 
+                    class="profile-pic" height="200px" width="175px" style="border-radius: 
+                    30%; border-style: double;">
+                </td>
+                <td>
+                    <p style="font-size: large;margin-left: 20px;">
+                    My name is <strong>Ahmed Akrout</strong>, a pre-engineering student at ISIMM passionate about :</p><br>
+                    <div class="passion1" style="border: 1px solid #4caf50; padding: 10px; margin: 10px;">
+                        <p>Embedded Systems</p>
+                    </div>
+                    <div class="passion2" style="border: 1px solid #6352e8; padding: 10px; margin: 10px;">
+                        <p>IoT</p>
+                    </div>
+                    <div class="passion3" style="border: 1px solid #3b6fcf; padding: 10px; margin: 10px;">
+                        <p>Web Development</p>
+                    </div>
+                    <div class="passion4" style="border: 1px solid #ff5722; padding: 10px; margin: 10px;">
+                        <p>Operating Systems</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        
+    </div>
+
+    <div class="card intro-card">
+        <table>
+            <tr>
+                <td>
+                    <div class="description">
+                        <br>
+                        <h2>Project Description</h2><br>
+                        <p style="font-size: large;">
+                            <b>This project simulates a smart greenhouse that monitors environmental
+                            conditions such as temperature, humidity, soil moisture, and water levels.
+                            It also controls actuators like pumps, heater, and cooling fan.</b>
+                        </p><br>
+                        <img src="/home/ahmed/Downloads/oie_transparent.png" height="600px" width="600px">
+                    </div>
+                </td>
+                <td>
+                    <div class="pdf-container">
+                        <iframe style="margin-top: 5px;margin-bottom: 5px;margin-left: 5px;margin-right: 5px;border-radius: 15px;"
+                            src="/home/ahmed/Downloads/projet cpp ahmed akrout et khalil basdouri cpi2.pdf" 
+                            width="100%" 
+                            height="100%">
+                        </iframe>
+                    </div>
+                </td>
+                
+            </tr>
+        </table>
+    </div>
+
+    <div class="card intro-card">
+        <h2>Technologies Used</h2>
+        <p style="font-size: larger;">HTML / CSS / JavaScript :</p>
+        <button class="btn" onclick="toggleSource()">View Source code</button>
+        <pre id="sourceCode" style="display:none; 
+        background:#111; color:#2ED981; padding:15px;text-align: left; font-size: 15px;"></pre><br>
+        <a href="/home/ahmed/smart_greenhouse/server/templates/cssCode.html" class="btn">
+        View CSS code
+        </a>
+        <p style="font-size: larger;">Real-time data simulation : Python Flask</p>
+        <p style="font-size: larger;">Chart.js for visualization</p>
+        <p style="font-size: larger;">PHP / MySQL for database management</p>
+    </div>
+
+    <a href="/opt/lampp/htdocs/smart_greenhouse/projet.html" class="start-btn">
+        Enter Dashboard
+    </a>
+
+</div>
+
+</body>
+<script>
+function toggleSource() {
+    let container = document.getElementById("sourceCode");
+
+    if (container.style.display === "none") {
+
+        let source = document.body.innerHTML;
+
+        source = source
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        container.innerHTML = source;
+        container.style.display = "block";
+
+    } else {
+        container.style.display = "none";
+    }
+}
+</script>
+</html>
