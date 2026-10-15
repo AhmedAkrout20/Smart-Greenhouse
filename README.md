@@ -97,7 +97,6 @@ Wire the components following `docs/wiring.png`.
 4. Copy `config.example.php` to `config.php` and set your database credentials.
 5. Open `http://localhost/dashboard` in your browser.
 
-> 🔒 `config.php` is listed in `.gitignore`. Never commit credentials.
 
 ---
 
